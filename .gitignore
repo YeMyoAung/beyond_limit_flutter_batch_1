@@ -4,3 +4,4 @@
 test/
 bin/
 pubspec.lock
+*.lock
