@@ -8,7 +8,8 @@ dynamic firstWhere(bool test(dynamic element), {dynamic orElse()?}) {
 
 ///
 ///datatype Function(args) `name`
-dynamic firstWherePro(bool Function(dynamic element) test, {
+dynamic firstWherePro(
+  bool Function(dynamic element) test, {
   dynamic Function()? orElse,
 }) {}
 
@@ -25,18 +26,22 @@ Iterable where(bool test(dynamic element)) => [];
 
 ///datatype Function(args) `name`
 ///dnv
-///d => String
-///d => datatype Function(args)
-Iterable wherePro(bool Function(dynamic element) test,) =>
+///d => StringFunction(args)
+///d => datatype
+Iterable wherePro(
+  bool Function(dynamic element) test,
+) =>
     [];
 
-void pro(bool Function(String a, int b, [bool? c]) test,
-    bool Function({
+void pro(
+  bool Function(String a, int b, [bool? c]) test,
+  bool Function({
     required String a,
     required int b,
     required double c,
     required bool e,
-    }) pass,) {
+  }) pass,
+) {
   test("", 1, null);
   pass(a: '', b: 1, c: 1, e: false);
 }
