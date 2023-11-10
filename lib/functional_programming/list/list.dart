@@ -1,3 +1,5 @@
+import 'dart:math';
+
 void main() {
   List<int> a = [1, 2, 3, 4, 5, 6];
   //count 6
@@ -100,12 +102,69 @@ void main() {
 
   ///LOOP => limit
   ///map,forEach == for in
-  final mapResult = dataset.map<String>((a) {
-    return "HELLO " + a;
+  final mapResult = dataset.map<Map<String, String>>((a) {
+    return {
+      "name": a,
+    };
   });
   //['value',]//index
   ///{
   ///index:value,
   ///}
   print(mapResult);
+
+  dataset.forEach((String value) {
+    print(value);
+  });
+
+  final bool everyResult = [12, 15, 10].every((element) {
+    return element > 10;
+  });
+  print(everyResult);
+
+  final bool anyResult = [12, 15, 10, 16].any((element) {
+    return element > 15;
+  });
+  print(anyResult);
+
+  final List takeResult = [1, 2, 3, 4].take(1).toList();
+  print(takeResult);
+
+  final List<int> sublistResult = [1, 2, 3, 4, 5].sublist(2, 4);
+  print(sublistResult);
+
+  final List<int> generatedValues = List.generate(10, (value) {
+    ///null
+    return value + 1;
+  });
+  print(generatedValues);
+
+  final List customGeneratedValues = generate(20, (i) => i + 1);
+  print(customGeneratedValues);
+
+  List.empty(); //[]
+  final List<String> filledValues = List.filled(10, 'hello');
+  print(filledValues);
+  print(filled(10, 1));
+
+  customGeneratedValues.shuffle(Random());
+  print(customGeneratedValues);
+  customGeneratedValues.shuffle(Random.secure());
+  print(customGeneratedValues);
+}
+
+List generate(int lenght, Function(int i) callback) {
+  List values = [];
+  for (int i = 0; i < lenght; i++) {
+    values.add(callback(i));
+  }
+  return values;
+}
+
+List filled(int lenght, value) {
+  List values = [];
+  for (var i = 0; i < lenght; i++) {
+    values.add(value);
+  }
+  return values;
 }
