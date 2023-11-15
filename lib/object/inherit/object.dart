@@ -17,7 +17,7 @@ class ParentTwo {
 
 // extends
 class ChildOne extends Parent {
-  ChildOne(String name) : super(name) {
+  ChildOne(String name, String age) : super(name) {
     ///instance
     print("Child One");
   }
@@ -36,6 +36,18 @@ class ChildOne extends Parent {
   }
 }
 
-class ChildTwo extends ChildOne {
+class ChildTwo extends Parent {
   ChildTwo(super.name);
+}
+
+class ChildOneChild extends ChildOne {
+  // ChildOneChild(String v1, String v2) : super(v1, v2);
+  ChildOneChild(super.name, super.age);
+}
+
+void main() {
+  // ChildOneChild();
+  ///အစားတောင်း,ကိုယ်တိုင်တောင်း ပြန်ထည့်ပေး
+  ///super     , (fadsf):super()
+  // ChildOne();
 }
