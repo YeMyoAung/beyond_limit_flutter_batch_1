@@ -6,6 +6,14 @@ import 'dart:math';
 /// reward 1 = 5,2= 3
 /// speed
 
+//  user  point 10
+//  horse No:
+//  1 to 3 ?
+//  true  +1
+//  :
+//  false -1
+//  point  0     game over
+
 final Map<String, List<Horse>> reward = {};
 
 class Horse {
