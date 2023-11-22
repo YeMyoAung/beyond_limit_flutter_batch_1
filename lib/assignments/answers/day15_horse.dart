@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'dart:math';
 
+/// 1 - 3
+/// time sort => take 3
+
 /// 5
 /// distance = input
 /// reward 1 = 5,2= 3
@@ -27,6 +30,14 @@ class Horse {
 
   void run() {
     initialSpeed = Random.secure().nextInt(10).toDouble();
+  }
+
+  @override
+  int get hashCode => _name.hashCode;
+
+  @override
+  operator ==(covariant Horse other) {
+    return _name == other._name;
   }
 
   @override
@@ -71,30 +82,125 @@ Future<void> goGOGO(
   await goGOGO(distance, past, currentSpeed, horse);
 }
 
+class UserProfile {
+  final String name;
+  int beat;
+  int _point;
+  UserProfile(this.name, [this.beat = 1]) : _point = 10;
+
+  bool get isGameOver {
+    return _point <= 0;
+  }
+
+  int get point {
+    return _point;
+  }
+
+  void win() {
+    _point += beat;
+  }
+
+  void lose() {
+    _point -= beat;
+  }
+}
+
+late UserProfile player;
+List<Horse> beatHorses = [];
+
 void main() {
-  print("Distance:");
+  print("Username:");
+  player = UserProfile(stdin.readLineSync() ?? "Guest");
+  print("Welcome from Horse Game!");
+  print("${player.name}, Your Point is : ${player.point}");
+  game();
+}
 
-  int? distance = int.tryParse(stdin.readLineSync().toString()) ?? 3;
-  print("Horse Count:");
+Future game() async {
+  final randomHNum = Random.secure().nextInt(50);
 
-  int? count = int.tryParse(stdin.readLineSync().toString()) ?? 5;
+  int? count = randomHNum < 5 ? 10 : randomHNum;
 
-  final List<Horse> horseList = List.generate(
-    count,
-    (index) => Horse(
-      Random.secure().nextInt(10).toDouble(),
+  final List<Horse> horseList = List.generate(count, (index) {
+    final randomSpeed = Random.secure().nextInt(10).toDouble();
+
+    return Horse(
+      randomSpeed == 0 ? 2 : randomSpeed,
       index + 1,
-    ),
-  );
+    );
+  });
 
-  Future.wait(
+  print("Available Horse No:");
+  for (var element in horseList) {
+    print("$element, Speed ${element.initialSpeed}");
+  }
+
+  print("Choose Your Horse No:");
+
+  int? chooseYourHorse;
+  while (chooseYourHorse == null) {
+    chooseYourHorse = int.tryParse(stdin.readLineSync().toString());
+    if ((chooseYourHorse ?? 0) > count) {
+      print("Unavailable");
+      chooseYourHorse = null;
+    }
+  }
+  beatHorses.add(horseList[chooseYourHorse - 1]);
+
+  print("Beat");
+
+  int? beat;
+  while (beat == null) {
+    beat = int.tryParse(stdin.readLineSync().toString());
+    if ((beat ?? 0) > player.point) {
+      print("Not enough points to beat");
+      beat = null;
+    }
+  }
+
+  player.beat = beat;
+
+  final randomDNum = Random.secure().nextInt(20);
+
+  final int distance = randomDNum == 0 ? 5 : randomDNum;
+
+  await Future.wait(
     horseList.map(
       (horse) => goGOGO(distance, distance, horse.initialSpeed, horse),
     ),
-  ).then((value) {
-    print("Winner");
-    reward.forEach((key, value) {
-      print("$key: $value");
-    });
+  );
+  print("Result");
+  reward.forEach((key, value) {
+    print("$key: $value");
   });
+  final List<DateTime> result =
+      reward.keys.map((e) => DateTime.parse(e)).toList();
+  result.sort((p, c) => p.compareTo(c));
+  // print("D $result");
+  final top3 = result.take(3).map((e) => e.toString());
+  //print("D $top3");
+  // reward String,List<H>
+  // List<H> ,String
+  // H,      String
+
+  // [].add('');
+
+  final Map<Horse, String> update = reward.map((key, value) {
+    if (value.contains(beatHorses.last)) {
+      return MapEntry(beatHorses.last, key);
+    }
+    return MapEntry(value.first, key);
+  });
+  if (top3.contains(update[beatHorses.last])) {
+    print("Win");
+    player.win();
+  } else {
+    print("Lose");
+    player.lose();
+  }
+  if (player.isGameOver) {
+    print("Game Over");
+  } else {
+    await game();
+  }
 }
